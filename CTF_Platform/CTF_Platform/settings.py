@@ -68,7 +68,7 @@ TEMPLATES = [
     },
 ]
 
-AUTH_USER_MODEL = 'authentication.UserModel'
+AUTH_USER_MODEL = 'authentication.UserAccount'
 WSGI_APPLICATION = 'CTF_Platform.wsgi.application'
 
 
