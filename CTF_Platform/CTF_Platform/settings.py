@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'authentication'
 ]
 
 MIDDLEWARE = [
@@ -67,6 +68,7 @@ TEMPLATES = [
     },
 ]
 
+AUTH_USER_MODEL = 'authentication.UserAccount'
 WSGI_APPLICATION = 'CTF_Platform.wsgi.application'
 
 
