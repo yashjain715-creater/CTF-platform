@@ -49,7 +49,7 @@ class UserAccount(AbstractBaseUser):
     is_staff				= models.BooleanField(default=False)
     is_superuser			= models.BooleanField(default=False)
     first_name              = models.CharField(max_length=30)
-    last_name               = models.CharField(max_length=30)
+    last_name               = models.CharField(max_length=30,blank=True,null=True)
     college_name            = models.CharField(max_length=200,blank=False,null=False)
 
     YEARS=(
@@ -57,42 +57,10 @@ class UserAccount(AbstractBaseUser):
         ('TWO','2nd year'),
         ('THREE','3rd year'),
         ('FOUR','4th year'),
-
+        ('FIVE','5th year'),
     )
     year = models.CharField(max_length=20,choices=YEARS,blank=False,null=False)
 
-    GENDER=(
-        ('M','Male'),
-        ('F','Female'),
-        ('O','Others'),
-    )
-    gender = models.CharField(max_length=20,choices=GENDER,blank=False,null=False)
-
-    mobile_no=models.CharField(
-        max_length=10,
-        blank=False,
-        null=False,
-        validators=[MinLengthValidator(10),validate_phone_number])
-
-    BRANCH=(
-        ('ARCH','Architecture, Planning and Design'),
-        ('CERA','Ceramic Engineering and Technology'),
-        ('CHEM','Chemical Engineering'),
-        ('CIVIL','Civil Engineering'),
-        ('CSE','Computer Science and Engineering'),
-        ('EEE','Electrical Engineering'),
-        ('ECE','Electronics Engineering'),
-        ('MECH','Mechanical Engineering'),
-        ('META','Metallurgical Engineering'),
-        ('MINE','Mining Engineering'),
-        ('PHARMA','Pharmaceutical Engineering and Technology'),
-        ('MNC','Mathematics and Computing'),
-        ('EP','Engineering Physics'),
-        ('BIOCHEM','Biochemical Engineering'),
-        ('BIOMED','Biomedical Engineering'),
-
-    )
-    branch = models.CharField(max_length=100,choices=BRANCH,blank=False,null=False)
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']
