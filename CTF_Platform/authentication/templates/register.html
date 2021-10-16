@@ -11,6 +11,7 @@
     <div style="min-height: 100vh;
     display: flex; justify-content: center; align-items: center;">
         <form class="d-inline-flex p-5 flex-column justify-content-center align-items-center" style="background-color: #393E46 ; border-radius: 8px; box-shadow: 10px 10px 10px 4px rgba(0,0,0,0.2);" method="post" action="">
+            {% csrf_token %}
             <div>
                 <h1 style="color: white; text-align: center;">Register</h1>
                 <p class="form-text" style="color: white;">Please Register to continue to CTF-Platform</p>
