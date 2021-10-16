@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login,logout,authenticate
 from .models import UserAccount
+from django.contrib.auth.models import User
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import force_str, smart_str, smart_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from .utils import Util
+from django.contrib import messages
 
 def loginView(request):
     context={
@@ -69,10 +71,10 @@ def ActivateAccountView(request,uidb64, token):
 
         if not PasswordResetTokenGenerator().check_token(user, token):
             # invalid token
-            return render(request, 'register.html')      
+            return render(request, 'login.html')      
         user.is_active=True
         user.save()
-        return render(request,'account_activated.html')
+        return render(request,'emailConfirmation.html')
 
     except DjangoUnicodeDecodeError as identifier:
         # invalid token
@@ -80,12 +82,13 @@ def ActivateAccountView(request,uidb64, token):
 
 def resetQueryView(request):
     if request.method=="POST":
+        # print("Post......")
         email = request.POST.get('email')
         if UserAccount.objects.filter(email=email).exists():
             user = UserAccount.objects.get(email=email)
             if user.is_active==False:
-                print("account not active")
-                return render(request, 'passwordReset.html')
+                return render(request, 'forgotPassword.html')
+            # print("Verified.....")
             uidb64 = urlsafe_base64_encode(smart_bytes(user.id))
             token = PasswordResetTokenGenerator().make_token(user)
             current_site = get_current_site(request=request).domain
@@ -96,19 +99,23 @@ def resetQueryView(request):
             Util.send_email(data)
             return render(request, 'verifyYourAccount.html')
         else:
-            return render(request, 'getEmail.html')
+            return render(request, 'forgotPassword.html')
 
-    return render(request, 'getEmail.html')
+    return render(request, 'forgotPassword.html')
 
 def ResetPasswordView(request,uidb64, token):
     if request.method=="POST":
         id = smart_str(urlsafe_base64_decode(uidb64))
         user = UserAccount.objects.get(id=id)
-        print("request",user,token)
-        if not PasswordResetTokenGenerator().check_token(user, token):
-            print("error")
+        # print("request",user,token)
+        if(request.POST.get('password')!=request.POST.get('confirmpassword')):
+            messages.warning(request, 'Passwords are not same!')
             return render(request, 'passwordReset.html')
+            
+        if not PasswordResetTokenGenerator().check_token(user, token):
+            return render(request, 'login.html')
+            # print("error")
         user.password=request.POST.get('password')
         user.save()
-        return render(request, 'reset_successful.html')
+        return render(request, 'successful.html')
     return render(request, 'passwordReset.html')   
