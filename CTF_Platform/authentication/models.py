@@ -77,3 +77,14 @@ class UserAccount(AbstractBaseUser):
 	# Does this user have permission to view this app? (ALWAYS YES FOR SIMPLICITY)
     def has_module_perms(self, app_label):
 	    return True
+
+class Team(models.Model):
+    team_name = models.CharField(max_length=122)
+    team_key = models.CharField(max_length=70)
+    date_posted = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
+    author = models.ForeignKey(UserAccount, on_delete = models.CASCADE)
+    member1 = models.ForeignKey(UserAccount, on_delete = models.CASCADE,related_name='member1',null=True,blank=True)
+    member2 = models.ForeignKey(UserAccount, on_delete = models.CASCADE,related_name='member2',null=True,blank=True)
+    
+    def __str__(self):
+        return self.team_name
